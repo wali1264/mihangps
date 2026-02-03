@@ -1,0 +1,7 @@
+{
+  "name": "mihangps",
+  "description": "A professional contract management system with dynamic field mapping on letterheads, supporting A4/A5 formats and precise printing coordinates.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
