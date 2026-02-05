@@ -663,7 +663,9 @@ const Workspace = ({ template, editData, onEditCancel, perms, formData, setFormD
   const [managerTimeFilter, setManagerTimeFilter] = useState<'all' | 'today' | 'yesterday' | 'week' | 'month'>('all');
 
   const isAdmin = currentUser?.username === 'admin'; const isStrictEmployee = currentUser?.role_id === 'employee_role';
-  const canSearch = !isStrictEmployee && (isAdmin || perms.includes('workspace_search')); const canCreate = !isStrictEmployee && (isAdmin || perms.includes('workspace_create')); const canEditInWorkspace = isAdmin || perms.includes('archive_edit') || isStrictEmployee;
+  const canSearch = !isStrictEmployee && (isAdmin || perms.includes('workspace_search')); const canCreate = !isStrictEmployee && (isAdmin || perms.includes('workspace_create')); 
+  // Adjusted logic to respect the new 'workspace_save' permission
+  const canEditInWorkspace = isAdmin || perms.includes('archive_edit') || perms.includes('workspace_save') || isStrictEmployee;
   const FONT_OPTIONS = [{ name: 'Vazirmatn', label: 'وزیر متن (استاندارد)' }, { name: 'Bahij Nazanin', label: 'بهیج نازنین (رسمی)' }, { name: 'Lalezar', label: 'لاله‌زار (ضخیم)' }];
 
   // Phase 2: Server-side Live Search for Workspace
@@ -866,7 +868,8 @@ const Workspace = ({ template, editData, onEditCancel, perms, formData, setFormD
 
 const UsersManager = ({ currentUser }: { currentUser: any }) => {
   const [users, setUsers] = useState<any[]>([]); const [roles, setRoles] = useState<any[]>([]); const [subTab, setSubTab] = useState<'users' | 'roles'>('users'); const [editingUser, setEditingUser] = useState<any>(null); const isAdmin = currentUser?.username === 'admin';
-  const permissionsList = [{ id: 'workspace', label: 'دسترسی به میز کار', parent: null }, { id: 'workspace_create', label: 'ایجاد پرونده جدید', parent: 'workspace' }, { id: 'workspace_search', label: 'جستجوی مشتریان', parent: 'workspace' }, { id: 'archive', label: 'مشاهده بایگانی', parent: null }, { id: 'archive_print', label: 'چاپ در بایگانی', parent: 'archive' }, { id: 'archive_edit', label: 'ویرایش در بایگانی', parent: 'archive' }, { id: 'archive_delete', label: 'حذف سوابق بایگانی', parent: 'archive' }, { id: 'accounting', label: 'دسترسی به امور مالی', parent: null }, { id: 'reports', label: 'مشاهده گزارشات', parent: null }, { id: 'settings', label: 'دسترسی به تنظیمات', parent: null }, { id: 'settings_boom', label: 'مدیریت بوم طراحی', parent: 'settings' }, { id: 'settings_users', label: 'مدیریت کاربران و نقش‌ها', parent: 'settings' }, { id: 'settings_backup', label: 'پشتیبان‌گیری داده‌ها', parent: 'settings' }];
+  // Added 'workspace_save' to permissionsList
+  const permissionsList = [{ id: 'workspace', label: 'دسترسی به میز کار', parent: null }, { id: 'workspace_create', label: 'ایجاد پرونده جدید', parent: 'workspace' }, { id: 'workspace_search', label: 'جستجوی مشتریان', parent: 'workspace' }, { id: 'workspace_save', label: 'قابلیت ثبت و ذخیره قرارداد', parent: 'workspace' }, { id: 'archive', label: 'مشاهده بایگانی', parent: null }, { id: 'archive_print', label: 'چاپ در بایگانی', parent: 'archive' }, { id: 'archive_edit', label: 'ویرایش در بایگانی', parent: 'archive' }, { id: 'archive_delete', label: 'حذف سوابق بایگانی', parent: 'archive' }, { id: 'accounting', label: 'دسترسی به امور مالی', parent: null }, { id: 'reports', label: 'مشاهده گزارشات', parent: null }, { id: 'settings', label: 'دسترسی به تنظیمات', parent: null }, { id: 'settings_boom', label: 'مدیریت بوم طراحی', parent: 'settings' }, { id: 'settings_users', label: 'مدیریت کاربران و نقش‌ها', parent: 'settings' }, { id: 'settings_backup', label: 'پشتیبان‌گیری داده‌ها', parent: 'settings' }];
   useEffect(() => { fetchData(); }, []);
   const fetchData = async () => { const { data: u = [] } = await supabase.from('users').select('*'); const { data: r = [] } = await supabase.from('roles').select('*'); if (u) setUsers(u); if (r) setRoles(r); };
   const handleSaveUser = async (e: React.FormEvent<HTMLFormElement>) => {
