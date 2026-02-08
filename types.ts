@@ -39,8 +39,12 @@ export interface ContractTemplate {
 export interface ClientProfile {
   id: string;
   name: string;
-  fatherName: string;
+  father_name?: string;
+  fatherName?: string; // Compatibility
+  grandfather_name?: string;
   tazkira: string;
   phone: string;
-  createdAt: string;
+  plate_number?: string;
+  created_at?: string;
+  createdAt?: string; // Compatibility
 }
